@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 
@@ -12,15 +13,35 @@
 		<connection>scm:git:https://github.com/wtt2012/forest-dbutils.git</connection>
 		<url>scm:git:https://github.com/wtt2012/forest-dbutils.git</url>
 		<developerConnection>scm:git:https://github.com/wtt2012/forest-dbutils.git</developerConnection>
-	  <tag>HEAD</tag>
-  </scm>
+		<tag>HEAD</tag>
+	</scm>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<build>
-
-
+		<!-- <extensions> <extension> <groupId>org.apache.maven.wagon</groupId> 
+			<artifactId>wagon-webdav</artifactId> <version>1.0-beta-2</version> </extension> 
+			</extensions> -->
+		<extensions>
+			<extension>
+				<groupId>com.google.code.maven-svn-wagon</groupId>
+				<artifactId>maven-svn-wagon</artifactId>
+				<version>1.4</version>
+			</extension>
+		</extensions>
 		<plugins>
+		<!-- 	<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<version>please use the latest version of the deploy plugin</version>
+				<dependencies>
+					<dependency>
+						<groupId>com.google.code.maven-svn-wagon</groupId>
+						<artifactId>maven-svn-wagon</artifactId>
+						<version>1.4</version>
+					</dependency>
+				</dependencies>
+			</plugin> -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
@@ -167,4 +188,24 @@
 			<layout>default</layout>
 		</repository>
 	</repositories>
+
+
+	<distributionManagement>
+		<repository>
+			<id>maven-fengfei-repo</id>
+			<name>Maven Repo for fengfei (releases)</name>
+			<url>svn:https://fengfei.googlecode.com/svn/maven-repo/releases</url>
+			<uniqueVersion>false</uniqueVersion>
+		</repository>
+		<snapshotRepository>
+			<id>maven-fengfei-snapshot</id>
+			<name>Maven Repo fengfei (snapshots)</name>
+			<url>svn:https://fengfei.googlecode.com/svn/maven-repo/snapshots</url>
+			<uniqueVersion>false</uniqueVersion>
+		</snapshotRepository>
+	</distributionManagement>
+
+
+
+
 </project>
