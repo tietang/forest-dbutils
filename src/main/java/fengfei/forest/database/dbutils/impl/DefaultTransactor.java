@@ -91,10 +91,20 @@ public class DefaultTransactor<T> implements Transactor<T> {
 	 */
 	@Override
 	public Transactor<T> execute() throws SQLException {
-		begin();
-		result = callback.execute(this.grower);
-		commit();
-		return this;
+
+		try {
+			begin();
+			result = callback.execute(this.grower);
+			commit();
+			return this;
+		} catch (SQLException e) {
+			grower.rollback();
+			throw e;
+		} catch (Throwable e) {
+			throw e;
+		} finally {
+			grower.close();
+		}
 	}
 
 	/*
@@ -110,10 +120,19 @@ public class DefaultTransactor<T> implements Transactor<T> {
 	@Override
 	public T execute(Transactor.TransactorCallback<T> callback)
 			throws SQLException {
-		begin();
-		result = callback.execute(this.grower);
-		commit();
-		return result;
+		try {
+			begin();
+			result = callback.execute(this.grower);
+			commit();
+			return result;
+		} catch (SQLException e) {
+			grower.rollback();
+			throw e;
+		} catch (Throwable e) {
+			throw e;
+		} finally {
+			grower.close();
+		}
 	}
 
 }

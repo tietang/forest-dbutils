@@ -43,6 +43,10 @@ import com.alibaba.druid.pool.DruidDataSource;
  *     <property name="poolPreparedStatements" value="true" />
  *     <property name="maxPoolPreparedStatementPerConnectionSize" value="20" />
  *  
+ *     如何配置关闭长时间不使用的连接
+ *     <property name="removeAbandoned" value="true" /> <!-- 打开removeAbandoned功能 -->
+ *     <property name="removeAbandonedTimeout" value="1800" /> <!-- 1800秒，也就是30分钟 -->
+ *     <property name="logAbandoned" value="true" /> <!-- 关闭abanded连接时输出错误日志 -->
  *     <!-- 配置监控统计拦截的filters -->
  *     <property name="filters" value="stat" />
  * </bean>
@@ -66,11 +70,13 @@ public class DruidPoolableDataSourceFactory implements
 		try {
 
 			ds = new DruidDataSource();
+
 			ds.setUrl(url);
 			ds.setDriverClassName(driverClass);
 			ds.setUsername(user);
 			ds.setPassword(password);
 			BeanUtils.copyProperties(ds, params);
+			ds.init();
 		} catch (Exception e) {
 			logger.error("create DruidDataSource error", e);
 			throw new PoolableException("create DruidDataSource  error", e);
