@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+import fengfei.forest.database.dbutils.impl.ForestRunner;
 import fengfei.forest.database.dbutils.impl.ForestRunner.InsertResultSet;
 
 public interface ForestGrower {
@@ -37,7 +38,7 @@ public interface ForestGrower {
 	public InsertResultSet<Integer> insertForInt(String sql, Object... params)
 			throws SQLException;
 
-	int batchUpdate(String sql, Object[]... params) throws SQLException;
+	int[] batchUpdate(String sql, Object[]... params) throws SQLException;
 
 	void begin() throws SQLException;
 
@@ -50,4 +51,6 @@ public interface ForestGrower {
 	Connection getConnection();
 
 	void setConnection(Connection connection);
+
+	ForestRunner getForestRunner();
 }

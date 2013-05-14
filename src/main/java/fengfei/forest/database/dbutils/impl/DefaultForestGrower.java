@@ -137,12 +137,18 @@ public class DefaultForestGrower implements ForestGrower {
 	}
 
 	@Override
-	public int batchUpdate(String sql, Object[]... params) throws SQLException {
+	public int[] batchUpdate(String sql, Object[]... params)
+			throws SQLException {
 		boolean isReadOnly = connection.isReadOnly();
 		connection.setReadOnly(false);
-		runner.batch(connection, sql, params);
+		int[] updated = runner.batch(connection, sql, params);
 		connection.setReadOnly(isReadOnly);
-		return 0;
+		return updated;
+	}
+
+	public ForestRunner getForestRunner() {
+
+		return runner;
 	}
 
 	@Override
