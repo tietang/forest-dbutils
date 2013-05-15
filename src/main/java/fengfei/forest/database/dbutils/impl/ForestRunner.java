@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Arrays;
 
 import org.apache.commons.dbutils.QueryRunner;
@@ -41,12 +42,12 @@ public class ForestRunner extends QueryRunner {
 			throws SQLException {
 		Connection conn = this.prepareConnection();
 
-		return this.insert(Integer.class, conn, true, sql, params);
+		return this.insert(Integer.class, conn, false, sql, params);
 	}
 
 	public InsertResultSet<Integer> insertForInt(Connection conn, String sql,
 			Object... params) throws SQLException {
-		return this.insert(Integer.class, conn, true, sql, params);
+		return this.insert(Integer.class, conn, false, sql, params);
 	}
 
 	public InsertResultSet<Long> insertForLong(Connection conn, String sql,
@@ -58,7 +59,7 @@ public class ForestRunner extends QueryRunner {
 			throws SQLException {
 		Connection conn = this.prepareConnection();
 
-		return this.insert(Long.class, conn, true, sql, params);
+		return this.insert(Long.class, conn, false, sql, params);
 	}
 
 	/**
@@ -96,7 +97,7 @@ public class ForestRunner extends QueryRunner {
 		int rows = 0;
 		InsertResultSet<?> resultSet = null;
 		try {
-			stmt = this.prepareStatement(conn, sql);
+			stmt = this.prepareStatementForWrite(conn, sql);
 			this.fillStatement(stmt, params);
 			rows = stmt.executeUpdate();
 			ResultSet rs = stmt.getGeneratedKeys();
@@ -126,6 +127,12 @@ public class ForestRunner extends QueryRunner {
 		}
 
 		return (InsertResultSet<T>) resultSet;
+	}
+
+	protected PreparedStatement prepareStatementForWrite(Connection conn, String sql)
+			throws SQLException {
+//		Statement.RETURN_GENERATED_KEYS
+		return conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 	}
 
 	public static class InsertResultSet<T extends Number> {

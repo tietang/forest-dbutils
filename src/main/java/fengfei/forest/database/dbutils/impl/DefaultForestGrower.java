@@ -129,6 +129,7 @@ public class DefaultForestGrower implements ForestGrower {
 
 		boolean isReadOnly = connection.isReadOnly();
 		connection.setReadOnly(false);
+		
 		InsertResultSet<Integer> irs = runner.insertForInt(connection, sql,
 				params);
 		connection.setReadOnly(isReadOnly);
