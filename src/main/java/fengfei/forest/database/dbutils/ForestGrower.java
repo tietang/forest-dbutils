@@ -19,6 +19,9 @@ public interface ForestGrower {
 	List<Map<String, Object>> select(String sql, Object... params)
 			throws SQLException;
 
+	List<Object[]> selectArray(String sql, Object... params)
+			throws SQLException;
+
 	<T> T selectOne(String sql, Transducer<T> transducer, Object... params)
 			throws SQLException;
 

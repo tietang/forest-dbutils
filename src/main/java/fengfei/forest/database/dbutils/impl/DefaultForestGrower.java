@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.dbutils.handlers.ArrayListHandler;
 import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
 import org.apache.commons.dbutils.handlers.MapHandler;
@@ -55,6 +56,14 @@ public class DefaultForestGrower implements ForestGrower {
 		printlnSQL(sql, params);
 		List<Map<String, Object>> list = runner.query(connection, sql,
 				new MapListHandler(), params);
+		return list;
+	}
+
+	public List<Object[]> selectArray(String sql, Object... params)
+			throws SQLException {
+		printlnSQL(sql, params);
+		List<Object[]> list = runner.query(connection, sql,
+				new ArrayListHandler(), params);
 		return list;
 	}
 
@@ -129,7 +138,7 @@ public class DefaultForestGrower implements ForestGrower {
 
 		boolean isReadOnly = connection.isReadOnly();
 		connection.setReadOnly(false);
-		
+
 		InsertResultSet<Integer> irs = runner.insertForInt(connection, sql,
 				params);
 		connection.setReadOnly(isReadOnly);
