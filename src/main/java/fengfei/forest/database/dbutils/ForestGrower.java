@@ -10,6 +10,9 @@ import fengfei.forest.database.dbutils.impl.ForestRunner.InsertResultSet;
 
 public interface ForestGrower {
 
+	<E, T> Map<E, T> selectMap(String sql, KeyValueTransducer<E, T> transducer,
+			Object... params) throws SQLException;
+
 	<T> List<T> select(String sql, Transducer<T> transducer, Object... params)
 			throws SQLException;
 

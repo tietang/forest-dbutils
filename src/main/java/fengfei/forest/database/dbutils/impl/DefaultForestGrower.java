@@ -15,6 +15,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import fengfei.forest.database.dbutils.ForestGrower;
+import fengfei.forest.database.dbutils.KeyValueHandler;
+import fengfei.forest.database.dbutils.KeyValueTransducer;
 import fengfei.forest.database.dbutils.ListHandler;
 import fengfei.forest.database.dbutils.OneBeanHandler;
 import fengfei.forest.database.dbutils.SingleValueHandler;
@@ -40,6 +42,15 @@ public class DefaultForestGrower implements ForestGrower {
 		List<T> list = runner.query(connection, sql, new ListHandler<T>(
 				transducer), params);
 		return list;
+	}
+
+	public <E, T> Map<E, T> selectMap(String sql,
+			KeyValueTransducer<E, T> transducer, Object... params)
+			throws SQLException {
+		printlnSQL(sql, params);
+		Map<E, T> map = runner.query(connection, sql,
+				new KeyValueHandler<E, T>(transducer), params);
+		return map;
 	}
 
 	@Override
