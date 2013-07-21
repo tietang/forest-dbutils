@@ -25,201 +25,193 @@ import fengfei.forest.database.dbutils.impl.ForestRunner.InsertResultSet;
 
 public class DefaultForestGrower implements ForestGrower {
 
-	private static Logger logger = LoggerFactory
-			.getLogger(DefaultForestGrower.class);
-	private Connection connection;
-	private ForestRunner runner;
+    private static Logger logger = LoggerFactory.getLogger(DefaultForestGrower.class);
 
-	public DefaultForestGrower(Connection connection) {
-		runner = new ForestRunner();
-		setConnection(connection);
-	}
+    private static Logger SqlPrint = LoggerFactory.getLogger("SQL_PRINT");
 
-	@Override
-	public <T> List<T> select(String sql, Transducer<T> transducer,
-			Object... params) throws SQLException {
-		printlnSQL(sql, params);
-		List<T> list = runner.query(connection, sql, new ListHandler<T>(
-				transducer), params);
-		return list;
-	}
+    private Connection connection;
+    private ForestRunner runner;
 
-	public <E, T> Map<E, T> selectMap(String sql,
-			KeyValueTransducer<E, T> transducer, Object... params)
-			throws SQLException {
-		printlnSQL(sql, params);
-		Map<E, T> map = runner.query(connection, sql,
-				new KeyValueHandler<E, T>(transducer), params);
-		return map;
-	}
+    public DefaultForestGrower(Connection connection) {
+        runner = new ForestRunner();
+        setConnection(connection);
+    }
 
-	@Override
-	public <T> List<T> select(String sql, Class<T> clazz, Object... params)
-			throws SQLException {
-		printlnSQL(sql, params);
-		List<T> list = runner.query(connection, sql, new BeanListHandler<T>(
-				clazz), params);
-		return list;
-	}
+    @Override
+    public <T> List<T> select(String sql, Transducer<T> transducer, Object... params)
+        throws SQLException {
+        printlnSQL(sql, params);
+        List<T> list = runner.query(connection, sql, new ListHandler<T>(transducer), params);
+        return list;
+    }
 
-	public List<Map<String, Object>> select(String sql, Object... params)
-			throws SQLException {
-		printlnSQL(sql, params);
-		List<Map<String, Object>> list = runner.query(connection, sql,
-				new MapListHandler(), params);
-		return list;
-	}
+    public <E, T> Map<E, T> selectMap(
+        String sql,
+        KeyValueTransducer<E, T> transducer,
+        Object... params) throws SQLException {
+        printlnSQL(sql, params);
+        Map<E, T> map = runner.query(
+            connection,
+            sql,
+            new KeyValueHandler<E, T>(transducer),
+            params);
+        return map;
+    }
 
-	public List<Object[]> selectArray(String sql, Object... params)
-			throws SQLException {
-		printlnSQL(sql, params);
-		List<Object[]> list = runner.query(connection, sql,
-				new ArrayListHandler(), params);
-		return list;
-	}
+    @Override
+    public <T> List<T> select(String sql, Class<T> clazz, Object... params) throws SQLException {
+        printlnSQL(sql, params);
+        List<T> list = runner.query(connection, sql, new BeanListHandler<T>(clazz), params);
+        return list;
+    }
 
-	@Override
-	public <T> T selectOne(String sql, Transducer<T> transducer,
-			Object... params) throws SQLException {
-		printlnSQL(sql, params);
-		T one = runner.query(connection, sql,
-				new OneBeanHandler<T>(transducer), params);
-		return one;
-	}
+    public List<Map<String, Object>> select(String sql, Object... params) throws SQLException {
+        printlnSQL(sql, params);
+        List<Map<String, Object>> list = runner.query(
+            connection,
+            sql,
+            new MapListHandler(),
+            params);
+        return list;
+    }
 
-	@Override
-	public <T> T selectOne(String sql, Class<T> clazz, Object... params)
-			throws SQLException {
-		printlnSQL(sql, params);
-		T one = runner
-				.query(connection, sql, new BeanHandler<T>(clazz), params);
-		return one;
-	}
+    public List<Object[]> selectArray(String sql, Object... params) throws SQLException {
+        printlnSQL(sql, params);
+        List<Object[]> list = runner.query(connection, sql, new ArrayListHandler(), params);
+        return list;
+    }
 
-	public Map<String, Object> selectOne(String sql, Object... params)
-			throws SQLException {
-		printlnSQL(sql, params);
-		Map<String, Object> one = runner.query(connection, sql,
-				new MapHandler(), params);
-		return one;
-	}
+    @Override
+    public <T> T selectOne(String sql, Transducer<T> transducer, Object... params)
+        throws SQLException {
+        printlnSQL(sql, params);
+        T one = runner.query(connection, sql, new OneBeanHandler<T>(transducer), params);
+        return one;
+    }
 
-	@Override
-	public int count(String sql, Object... params) throws SQLException {
-		printlnSQL(sql, params);
-		String one = runner.query(connection, sql, new SingleValueHandler(),
-				params);
-		if (one == null) {
-			return 0;
-		} else {
-			int ct = Integer.parseInt(one);
-			return ct;
-		}
-	}
+    @Override
+    public <T> T selectOne(String sql, Class<T> clazz, Object... params) throws SQLException {
+        printlnSQL(sql, params);
+        T one = runner.query(connection, sql, new BeanHandler<T>(clazz), params);
+        return one;
+    }
 
-	@Override
-	public int update(String sql, Object... params) throws SQLException {
-		printlnSQL(sql, params);
+    public Map<String, Object> selectOne(String sql, Object... params) throws SQLException {
+        printlnSQL(sql, params);
+        Map<String, Object> one = runner.query(connection, sql, new MapHandler(), params);
+        return one;
+    }
 
-		boolean isReadOnly = connection.isReadOnly();
-		connection.setReadOnly(false);
-		int ct = runner.update(connection, sql, params);
-		connection.setReadOnly(isReadOnly);
-		return ct;
-	}
+    @Override
+    public int count(String sql, Object... params) throws SQLException {
+        printlnSQL(sql, params);
+        String one = runner.query(connection, sql, new SingleValueHandler(), params);
+        if (one == null) {
+            return 0;
+        } else {
+            int ct = Integer.parseInt(one);
+            return ct;
+        }
+    }
 
-	@Override
-	public InsertResultSet<Long> insert(String sql, Object... params)
-			throws SQLException {
-		printlnSQL(sql, params);
+    @Override
+    public int update(String sql, Object... params) throws SQLException {
+        printlnSQL(sql, params);
 
-		boolean isReadOnly = connection.isReadOnly();
-		connection.setReadOnly(false);
-		InsertResultSet<Long> irs = runner.insertForLong(connection, sql,
-				params);
-		connection.setReadOnly(isReadOnly);
+        boolean isReadOnly = connection.isReadOnly();
+        connection.setReadOnly(false);
+        int ct = runner.update(connection, sql, params);
+        connection.setReadOnly(isReadOnly);
+        return ct;
+    }
 
-		return irs;
-	}
+    @Override
+    public InsertResultSet<Long> insert(String sql, Object... params) throws SQLException {
+        printlnSQL(sql, params);
 
-	@Override
-	public InsertResultSet<Integer> insertForInt(String sql, Object... params)
-			throws SQLException {
-		printlnSQL(sql, params);
+        boolean isReadOnly = connection.isReadOnly();
+        connection.setReadOnly(false);
+        InsertResultSet<Long> irs = runner.insertForLong(connection, sql, params);
+        connection.setReadOnly(isReadOnly);
 
-		boolean isReadOnly = connection.isReadOnly();
-		connection.setReadOnly(false);
+        return irs;
+    }
 
-		InsertResultSet<Integer> irs = runner.insertForInt(connection, sql,
-				params);
-		connection.setReadOnly(isReadOnly);
+    @Override
+    public InsertResultSet<Integer> insertForInt(String sql, Object... params) throws SQLException {
+        printlnSQL(sql, params);
 
-		return irs;
-	}
+        boolean isReadOnly = connection.isReadOnly();
+        connection.setReadOnly(false);
 
-	@Override
-	public int[] batchUpdate(String sql, Object[]... params)
-			throws SQLException {
-		boolean isReadOnly = connection.isReadOnly();
-		connection.setReadOnly(false);
-		int[] updated = runner.batch(connection, sql, params);
-		connection.setReadOnly(isReadOnly);
-		return updated;
-	}
+        InsertResultSet<Integer> irs = runner.insertForInt(connection, sql, params);
+        connection.setReadOnly(isReadOnly);
 
-	public ForestRunner getForestRunner() {
+        return irs;
+    }
 
-		return runner;
-	}
+    @Override
+    public int[] batchUpdate(String sql, Object[]... params) throws SQLException {
+        boolean isReadOnly = connection.isReadOnly();
+        connection.setReadOnly(false);
+        int[] updated = runner.batch(connection, sql, params);
+        connection.setReadOnly(isReadOnly);
+        return updated;
+    }
 
-	@Override
-	public void begin() throws SQLException {
-		this.connection.setAutoCommit(false);
-	}
+    public ForestRunner getForestRunner() {
 
-	@Override
-	public void commit() throws SQLException {
-		if (connection != null) {
-			this.connection.commit();
-		}
-	}
+        return runner;
+    }
 
-	@Override
-	public void rollback() throws SQLException {
-		if (connection != null) {
-			this.connection.rollback();
-		}
-		// try {
-		// connection.setAutoCommit(true);
-		// } catch (SQLException e) {
-		// log.warn("Can't setAutoCommit true", e);
-		// }
-	}
+    @Override
+    public void begin() throws SQLException {
+        this.connection.setAutoCommit(false);
+    }
 
-	private void printlnSQL(String sql, Object... params) {
-		logger.debug(sql + "  params: "
-				+ Arrays.asList(params == null ? new Object[] {} : params));
-	}
+    @Override
+    public void commit() throws SQLException {
+        if (connection != null) {
+            this.connection.commit();
+        }
+    }
 
-	@Override
-	public void close() throws SQLException {
-		if (connection != null) {
-			// try {
-			// connection.setAutoCommit(true);
-			// } catch (SQLException e) {
-			// log.warn("Can't setAutoCommit true", e);
-			// }
-			connection.close();
-		}
-	}
+    @Override
+    public void rollback() throws SQLException {
+        if (connection != null) {
+            this.connection.rollback();
+        }
+        // try {
+        // connection.setAutoCommit(true);
+        // } catch (SQLException e) {
+        // log.warn("Can't setAutoCommit true", e);
+        // }
+    }
 
-	public Connection getConnection() {
-		return connection;
-	}
+    private void printlnSQL(String sql, Object... params) {
+        SqlPrint.info(sql + "  params: "
+                + Arrays.asList(params == null ? new Object[] {} : params));
+    }
 
-	@Override
-	public void setConnection(Connection connection) {
-		this.connection = connection;
-	}
+    @Override
+    public void close() throws SQLException {
+        if (connection != null) {
+            // try {
+            // connection.setAutoCommit(true);
+            // } catch (SQLException e) {
+            // log.warn("Can't setAutoCommit true", e);
+            // }
+            connection.close();
+        }
+    }
+
+    public Connection getConnection() {
+        return connection;
+    }
+
+    @Override
+    public void setConnection(Connection connection) {
+        this.connection = connection;
+    }
 
 }
