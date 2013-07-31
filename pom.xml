@@ -9,9 +9,9 @@
 	<name>forest-dbutils</name>
 	<url>http://maven.apache.org</url>
 	<scm>
-		<connection>scm:git:https://github.com/wtt2012/forest-dbutils.git</connection>
-		<url>scm:git:https://github.com/wtt2012/forest-dbutils.git</url>
-		<developerConnection>scm:git:https://github.com/wtt2012/forest-dbutils.git</developerConnection>
+		<connection>scm:git:https://github.com/tietang/forest-dbutils.git</connection>
+		<url>scm:git:https://github.com/tietang/forest-dbutils.git</url>
+		<developerConnection>scm:git:https://github.com/tietang/forest-dbutils.git</developerConnection>
 		<tag>HEAD</tag>
 	</scm>
 	<properties>
