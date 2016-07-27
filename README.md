@@ -1,5 +1,7 @@
 # forest-dbutils #
 -----------------------
+[![Build Status](https://travis-ci.org/tietang/forest-dbutils.svg?branch=master)](https://travis-ci.org/tietang/forest-dbutils)
+
 
 a lightweight database tools commons-dbutils based
 
